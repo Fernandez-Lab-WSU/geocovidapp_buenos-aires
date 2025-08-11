@@ -1,0 +1,14 @@
+^renv$
+^renv\.lock$
+^.*\.Rproj$
+^\.Rproj\.user$
+^LICENSE\.md$
+\\.github
+^old_modules$
+^tools$
+^README\.Rmd$
+^README\.md$
+^Dockerfile$
+^rsconnect$
+R/config.yml
+

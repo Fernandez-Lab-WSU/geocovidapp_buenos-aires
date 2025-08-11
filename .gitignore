@@ -1,0 +1,12 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+.DS_Store
+.Rprofile
+.Renviron
+R/config.yml
+tests/
+old_modules/
+rsconnect/
+*sysdata.R

@@ -1,0 +1,80 @@
+---
+title: "GeoCovid: Reporte de Cambios en la Movilidad"
+output: word_document
+params:
+  partido: 'AVELLANEDA'
+  fecha: NA
+  tipo_de_raster: 'pc'
+  area: NA
+  imagen_manana: NA
+  imagen_tarde: NA
+  imagen_noche: NA
+  pandoc: NA
+  opacidad: 0.5
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+knitr::opts_chunk$set(echo = FALSE)
+library(geocovidapp) # shinyapps.io
+```
+
+#### Partido: `r params$partido` 
+#### Fecha: `r params$fecha`
+#### Tipo de raster: `r if(params$tipo_de_raster == 'pc'){'cambio prepandemia'}else{'cambio semanal'}`
+#### Opacidad del mapa: `r params$opacidad`. 
+**Plataforma interactiva**: https://piliffq.shinyapps.io/geocovid-bsas/
+
+GeoCovid Buenos Aires es una herramienta interactiva que permite visualizar cómo varía la movilidad en el espacio y en el tiempo en respuesta a intervenciones de salud pública, como las restricciones de circulación implementadas durante la pandemia de COVID-19 en Buenos Aires. A través de mapas dinámicos segmentados por franjas horarias (mañana, tarde y noche), la plataforma permite detectar patrones de movilidad y su evolución semanal. Esta visualización es clave para autoridades sanitarias, ya que permite evaluar el impacto territorial y temporal de distintas medidas, identificar zonas de mayor circulación y ajustar estrategias de control y comunicación de manera focalizada. En paralelo se muestra la evolución de los casos de COVID-19.
+
+## Casos de COVID-19 reportados
+
+```{r fig.height=3, fig.width=10, echo=FALSE}
+
+graficos <- geocovidapp::ggplot_casos_covid_doble(partido = params$partido,
+                                fecha = params$fecha)
+
+print(graficos$grafico_comparativo)
+```
+
+```{r fig.height=3, fig.width=10, echo=FALSE}
+
+# si la eleccion es comuna este grafico no se imprime
+if (!is.null(graficos$grafico_partido)) {
+  print(graficos$grafico_partido)
+}
+
+```
+
+## Mapas de Movilidad
+
+### Mañana
+
+Este mapa muestra cómo varió la movilidad matutina (aproximadamente entre las 6:00 y las 12:00) respecto a la semana anterior. Es útil para analizar comportamientos relacionados con el inicio de actividades laborales, escolares o desplazamientos esenciales. Las áreas con aumento de movimiento pueden señalar una relajación en el cumplimiento de restricciones, mientras que las zonas con disminución indican una mayor adhesión a las medidas vigentes.
+
+```{r mapa_manana}
+
+geocovidapp::mapa_reporte(part = params$partido, imagen = params$imagen_manana)
+
+```
+
+
+### Tarde
+
+Este mapa refleja los cambios en la movilidad registrados durante la tarde (aproximadamente entre las 12:00 y las 18:00). Esta franja horaria está asociada a actividades como compras, trámites, trabajo o recreación. Observar aumentos o disminuciones permite evaluar el impacto de medidas como cierres de comercios, restricciones horarias o campañas de concientización.
+
+```{r mapa_tarde}
+
+geocovidapp::mapa_reporte(part = params$partido, imagen = params$imagen_tarde)
+
+```
+
+### Noche
+
+Este mapa representa las variaciones en la movilidad nocturna (aproximadamente entre las 18:00 y las 00:00), un período clave para detectar actividades sociales o recreativas que pueden no estar alineadas con las recomendaciones sanitarias. Una disminución sostenida podría reflejar el efecto de toques de queda o restricciones de circulación nocturna, mientras que un aumento puede indicar necesidad de reforzar controles o comunicación en ciertas áreas.
+
+```{r mapa_noche}
+
+geocovidapp::mapa_reporte(part = params$partido, imagen = params$imagen_noche)
+
+```
