@@ -1,4 +1,4 @@
-FROM rocker/r-base:4.2.1
+FROM rocker/r-base:4.4.0
 
 # Instala librerías del sistema necesarias
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -29,7 +29,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # Crear usuario no-root
-RUN addgroup --system app && adduser --system --ingroup app app
+RUN addgroup --system app && adduser --system --ingroup app --home /home/app app
+RUN mkdir -p /home/app && chown app:app /home/app
 
 WORKDIR /home/app
 
@@ -42,7 +43,7 @@ USER app
 
 # Instala renv y restaura dependencias
 RUN R -e "install.packages('renv', repos = 'https://cloud.r-project.org')"
-RUN R -e "renv::restore(prompt = FALSE)"
+RUN R -e "options(repos = c(CRAN='https://cloud.r-project.org')); renv::restore(prompt=FALSE)"
 
 # Instala el paquete local
 RUN R CMD INSTALL .
@@ -51,4 +52,5 @@ RUN R CMD INSTALL .
 EXPOSE 3838
 
 # Ejecutar la app desde inst/app
-CMD ["R", "-e", "shiny::runApp(system.file('app', package = 'geocovidapp'), port = 3838, host = '0.0.0.0')"]
+
+CMD ["R", "-e", "geocovidapp::run_app(demo = TRUE, port = 3838, host = '0.0.0.0')"]

@@ -47,6 +47,35 @@ library(geocovidapp)
 run_app()
 ```
 
+## Ejecutar la app con Docker
+
+Si querés correr la app sin instalar R ni dependencias locales, podés
+usar Docker.
+
+### Requisitos
+
+- Tener Docker instalado en tu sistema.  
+  <https://docs.docker.com/get-docker/>
+
+### Construir la imagen
+
+Desde la raíz del repositorio (donde está el Dockerfile), ejecutá:
+
+``` bash
+docker build -t geocovidapp .
+```
+
+Esto crea la imagen Docker llamada geocovidapp con la app y todas las
+dependencias. Correr la app
+
+Para iniciar la app en un contenedor y exponerla en el puerto 3838:
+
+``` bash
+docker run -p 3838:3838 geocovidapp
+```
+
+Luego abrí en tu navegador: `http://localhost:3838`
+
 ------------------------------------------------------------------------
 
 ## Proyectos relacionados
